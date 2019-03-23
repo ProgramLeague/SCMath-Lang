@@ -28,7 +28,7 @@ public:
     static tuple<double,double> LeastSquare(vectorNode &x, vectorNode &y)
     {
         double t1=0, t2=0, t3=0, t4=0;
-        for(int i=0; i<x.getl(); ++i)
+        for(unsigned int i=0; i<x.getl(); ++i)
         {
             t1 += x.v[i]*x.v[i];
             t2 += x.v[i];

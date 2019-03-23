@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <string>
+#include "scmath/matrix.hpp"
 using namespace std;
 
 class help
@@ -50,8 +51,41 @@ public:
         return atoi(str.c_str());
     }
 
+    static float tofloat(string str)
+    {
+        return atof(str.c_str());
+    }
+
     static void t()
     {
         printf("\t");
     }
+
+    static void getmatrix(matrixNode &A)
+    {
+        printf("{\n");
+        for (unsigned int i = 0; i < A.getr(); i++)
+        {
+            help::t();
+            for (unsigned int j = 0; j < A.getc(); j++)
+            {
+                scanf("%lf", &A.m[i][j]);
+            }
+        }
+        printf("}\n");
+        getchar();
+    }
+
+    static void getvector(vectorNode &B)
+    {
+        printf("{\n");
+        help::t();
+        for (unsigned int i = 0; i < B.getl(); i++)
+        {
+            scanf("%lf", &B.v[i]);
+        }
+        printf("}\n");
+        getchar();
+    }
+
 };

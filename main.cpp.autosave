@@ -71,9 +71,9 @@ int main()
                 isCommand=true;
                 vectorNode v1(help::toint(com[1]));
                 vectorNode v2(help::toint(com[1]));
-                cout<<"vector x:"<<endl;
+                cout<<"vector x="<<endl;
                 help::getvector(v1);
-                cout<<"vector y:"<<endl;
+                cout<<"vector y="<<endl;
                 help::getvector(v2);
                 double k,b;
                 tie(k,b)=lab::LeastSquare(v1,v2);

@@ -24,4 +24,5 @@ HEADERS += \
     scmath.h \
     scmath/matrix.hpp \
     numcalu.hpp \
-    help.h
+    help.h \
+    lab.h

@@ -7,69 +7,48 @@ Scope record::globalScope;
 bool ast::isInit = false;
 map<string,int> ast::BinOpPriority;
 
+void addFun(canBE canBEfun,BE BEfun,string name,int parnum=-1)
+{
+    record::globalScope.addFunction(name, new Function(canBEfun, BEfun,parnum));
+}
+
 static void ast::Init()
 {
     //初始化所有内置函数实体
-    Function* add = new Function(BuiltinFunc::hasTwoSonNodes, BuiltinFunc::add,2);
-    Function* sub = new Function(BuiltinFunc::hasTwoSonNodes, BuiltinFunc::sub,2);
-    Function* mul = new Function(BuiltinFunc::hasTwoSonNodes, BuiltinFunc::mul,2);
-    Function* div = new Function(BuiltinFunc::hasTwoSonNodes, BuiltinFunc::div,2);
-    Function* pow = new Function(BuiltinFunc::hasTwoSonNodes, BuiltinFunc::pow,2);
-    Function* sin = new Function(BuiltinFunc::hasOneSonNode, BuiltinFunc::sin,1);
-    Function* cos = new Function(BuiltinFunc::hasOneSonNode, BuiltinFunc::cos,1);
-    Function* log = new Function(BuiltinFunc::hasTwoSonNodes, BuiltinFunc::log, 2);
-    Function* ln = new Function(BuiltinFunc::hasOneSonNode, BuiltinFunc::ln, 1);
+    addFun(BuiltinFunc::hasTwoSonNodes, BuiltinFunc::add,"+",2);
+    addFun(BuiltinFunc::hasTwoSonNodes, BuiltinFunc::sub,"-",2);
+    addFun(BuiltinFunc::hasTwoSonNodes, BuiltinFunc::mul,"*",2);
+    addFun(BuiltinFunc::hasTwoSonNodes, BuiltinFunc::div,"/",2);
+    addFun(BuiltinFunc::hasTwoSonNodes, BuiltinFunc::pow,"^",2);
+    addFun(BuiltinFunc::hasOneSonNode, BuiltinFunc::sin,"sin",1);
+    addFun(BuiltinFunc::hasOneSonNode, BuiltinFunc::cos,"cos",1);
+    addFun(BuiltinFunc::hasTwoSonNodes, BuiltinFunc::log,"log",2);
+    addFun(BuiltinFunc::hasOneSonNode, BuiltinFunc::ln,"ln",1);
 
-    Function* assignment = new Function(BuiltinFunc::assignmentCheck, BuiltinFunc::assignment, 2);
-
-    Function* vecDot = new Function(BuiltinFunc::twoVec, BuiltinFunc::vecDot, 2);
-    Function* matDot = new Function(BuiltinFunc::twoMat, BuiltinFunc::matDot, 2);
-    Function* matAdd = new Function(BuiltinFunc::twoMat, BuiltinFunc::matAdd, 2);
-    Function* vecAdd = new Function(BuiltinFunc::twoVec, BuiltinFunc::vecAdd, 2);
-    Function* vecSub = new Function(BuiltinFunc::twoVec, BuiltinFunc::vecSub, 2);
-    Function* matSub = new Function(BuiltinFunc::twoMat, BuiltinFunc::matSub, 2);
-    Function* vecMul = new Function(BuiltinFunc::vecNum, BuiltinFunc::vecMul, 2);
-    Function* matMul = new Function(BuiltinFunc::matNum, BuiltinFunc::matMul, 2);
-    Function* getRVector = new Function(BuiltinFunc::matNum, BuiltinFunc::getRVector, 2);
-    Function* getCVector = new Function(BuiltinFunc::matNum, BuiltinFunc::getCVector, 2);
-    Function* setCVector = new Function(BuiltinFunc::pmatVecNum, BuiltinFunc::setCVector, 3);
-    Function* setRVector = new Function(BuiltinFunc::pmatVecNum, BuiltinFunc::setRVector, 3);
-    Function* det = new Function(BuiltinFunc::oneMat, BuiltinFunc::det, 1);
-    Function* inv = new Function(BuiltinFunc::oneMat, BuiltinFunc::inv, 1);
-    Function* adjoint = new Function(BuiltinFunc::oneMat, BuiltinFunc::adjoint, 1);
-    Function* linerSolve = new Function(BuiltinFunc::twoMat, BuiltinFunc::linerSolve, 2);
-    //将这些函数置入函数域
-    record::globalScope.addFunction("+",add);
-    record::globalScope.addFunction("-",sub);
-    record::globalScope.addFunction("*",mul);
-    record::globalScope.addFunction("/",div);
-    record::globalScope.addFunction("^",pow);
-    record::globalScope.addFunction("=",assignment);
+    addFun(BuiltinFunc::assignmentCheck, BuiltinFunc::assignment,"=",2);
     //fix:目前=是通过局部求值实现的，即在被赋值变量原先没有值的情况下，局部求值模式下eval结果仍然为
     //变量本身，这样传进=函数之后左边儿子就是变量本身，可以正确赋值。一旦变量已经被赋值，那进入=前
     //就会被eval为它的值，值不能赋值给值，这就错了。因此现在这个写法不好。正确的做法应该是在parse阶段
     //创建每个变量的指针（二级varnode），然后将这个指针作为=的左边儿子
-    record::globalScope.addFunction("sin",sin);
-    record::globalScope.addFunction("cos",cos);
-    record::globalScope.addFunction("log", log);
-    record::globalScope.addFunction("ln", ln);
 
-    record::globalScope.addFunction("linerSolve", linerSolve);
-    record::globalScope.addFunction("det", det);
-    record::globalScope.addFunction("inv", inv);
-    record::globalScope.addFunction("adjoint", adjoint);
-    record::globalScope.addFunction("setRVector", setRVector);
-    record::globalScope.addFunction("setCVector", setCVector);
-    record::globalScope.addFunction("getCVector", getCVector);
-    record::globalScope.addFunction("getRVector", getRVector);
-    record::globalScope.addFunction("matMul", matMul);
-    record::globalScope.addFunction("vecMul", vecMul);
-    record::globalScope.addFunction("matSub", matSub);
-    record::globalScope.addFunction("vecSub", vecSub);
-    record::globalScope.addFunction("vecAdd", vecAdd);
-    record::globalScope.addFunction("matAdd", matAdd);
-    record::globalScope.addFunction("matDot", matDot);
-    record::globalScope.addFunction("vecDot", vecDot);
+    addFun(BuiltinFunc::twoVec, BuiltinFunc::vecDot,"vecDot",2);
+    addFun(BuiltinFunc::twoMat, BuiltinFunc::matDot,"matDot",2);
+    addFun(BuiltinFunc::twoMat, BuiltinFunc::matAdd,"matAdd",2);
+    addFun(BuiltinFunc::twoVec, BuiltinFunc::vecAdd,"vecAdd",2);
+    addFun(BuiltinFunc::twoVec, BuiltinFunc::vecSub,"vecSub",2);
+    addFun(BuiltinFunc::twoMat, BuiltinFunc::matSub,"matSub",2);
+    addFun(BuiltinFunc::vecNum, BuiltinFunc::vecMul,"vecMul",2);
+    addFun(BuiltinFunc::matNum, BuiltinFunc::matMul,"matMul",2);
+    addFun(BuiltinFunc::matNum, BuiltinFunc::getRVector,"getRVec",2);
+    addFun(BuiltinFunc::pmatVecNum, BuiltinFunc::setRVector,"setRVec", 3);
+    addFun(BuiltinFunc::oneMat, BuiltinFunc::det,"det",1);
+    addFun(BuiltinFunc::oneMat, BuiltinFunc::inv,"inv",1);
+    addFun(BuiltinFunc::oneMat, BuiltinFunc::adjoint,"adjoint",1);
+    addFun(BuiltinFunc::twoMat, BuiltinFunc::linerSolve,"linerSolve",2);
+    addFun(BuiltinFunc::matNum3,BuiltinFunc::rsub,"rsub",4);
+    addFun(BuiltinFunc::matNum2,BuiltinFunc::rmul,"rmul",3);
+    addFun(BuiltinFunc::matNum2,BuiltinFunc::rswap,"rswap",3);
+
     //Function* entity=runtime::globalScope.functionList["+"]; //在parse阶段，可以这样从函数域中找到函数名对应的函数实体
     //FunNode* testNode=new FunNode(entity); //然后这样通过函数实体创建相应的函数节点
     BinOpPriority["$"] =0;
@@ -102,7 +81,7 @@ bool ast::canpush(stack<string> &stackOp, const string& op)
     return BinOpPriority[op] > BinOpPriority[stackOp.top()];
 }
 
-BasicNode* ast::__ToAST(string &s)
+BasicNode* ast::__ToAST(string &s, Scope* sc)
 {
     s += LowestPriority;
     stack<BasicNode*> stackAST;
@@ -141,7 +120,7 @@ BasicNode* ast::__ToAST(string &s)
             if(j < n && s[j] == '(') //函数
             {
                 string name=s.substr(i, j - i);
-                FunNode* node = new FunNode(record::globalScope.functionList[name]);
+                FunNode* node = new FunNode(sc->findFunction(name));
                 int countleftParenthesis = 1;
                 //此时s[j] == '('
                 i=j;
@@ -150,7 +129,7 @@ BasicNode* ast::__ToAST(string &s)
                     j++;
                     if(j < n && (s[j] == ','|| s[j] == ')') && countleftParenthesis == 1)
                     {
-                        node->addNode(ToAST(s.substr(i + 1, j - i - 1)));
+                        node->addNode(__ToAST(temp = s.substr(i + 1, j - i - 1), sc));
                         if(s[j]==')') countleftParenthesis--;
                         i=j;
                     }
@@ -169,13 +148,14 @@ BasicNode* ast::__ToAST(string &s)
             else //变量
             {
                 string name=s.substr(i, j -  i);
-                if(record::globalScope.haveVariable(name)==false) //先前没有这变量
+                Variable* v=sc->findVariable(name);
+                if(v==nullptr) //先前没有这变量
                 {
-                    Variable* v=record::globalScope.addVariable(name);
-                    Variable* pv=record::globalScope.addVariable("ptr"+name);
+                    v=sc->addVariable(name);
+                    Variable* pv=sc->addVariable("ptr"+name);
                     pv->setBorrowVal(v);
                 }
-                stackAST.push(record::globalScope.variableList[name]);
+                stackAST.push(v);
                 i = j;
             }
         }
@@ -193,12 +173,12 @@ BasicNode* ast::__ToAST(string &s)
             }
             if(s[j] == ')')
             {
-                stackAST.push(ToAST(s.substr(i + 1, j - i - 1)));
+                stackAST.push(__ToAST(temp = s.substr(i + 1, j - i - 1), sc));//为了让参数1变为左值
                 i = j + 1;//+1是要过掉‘)’
             }
             else//读到了字符串尾还是没有右括号
             {
-                stackAST.push(ToAST(s.substr(i + 1, j - i - 2)));
+                stackAST.push(__ToAST(temp = s.substr(i + 1, j - i - 2), sc));
                 i = j - 1;//应该忽略掉字符串结尾的$，便于下面判断是否能进stackOp
             }
         }
@@ -219,7 +199,7 @@ BasicNode* ast::__ToAST(string &s)
                     stackAST.pop();
                     string c = stackOp.top();
                     stackOp.pop();
-                    FunNode* node = new FunNode(record::globalScope.functionList[c]);
+                    FunNode* node = new FunNode(sc->findFunction(c));
                     node->addNode(b);
                     node->addNode(a);
                     stackAST.push(node);
@@ -236,7 +216,7 @@ BasicNode* ast::__ToAST(string &s)
     return stackAST.top();
 }
 
-BasicNode* ast::ToAST(string s){
+BasicNode* ast::ToAST(string s, Scope* sc){
     if(!isInit){
         Init();
         isInit = true;
@@ -247,5 +227,5 @@ BasicNode* ast::ToAST(string s){
             c--;
         }
     }
-    return __ToAST(s);
+    return __ToAST(s, sc);
 }

@@ -23,7 +23,7 @@ int main()
         if(input.find(" ")!=-1) //是命令初步判断
         {
             auto com=help::split(input," ");
-            if(com[0]=="matrix")
+            if(com[0]=="mat")
             {
                 isCommand=true;
                 matrixNode* m=new matrixNode(help::toint(com[2]),help::toint(com[3]));
@@ -33,7 +33,7 @@ int main()
                 pv->setBorrowVal(v);
                 help::getmatrix(*m);
             }
-            if(com[0]=="vector")
+            if(com[0]=="vec")
             {
                 isCommand=true;
                 vectorNode* vec=new vectorNode(help::toint(com[2]));
@@ -46,8 +46,9 @@ int main()
             if(com[0]=="del") //都使用指针赋值的话这个命令就没什么用了
             {
                 isCommand=true;
-                if(record::globalScope.haveVariable(com[1]))
-                    record::globalScope.variableList[com[1]]->clearVal();
+                Variable* v=record::globalScope.findVariable(com[1]);
+                if(v!=nullptr)
+                    v->clearVal();
                 else
                 {
                     help::t();

@@ -9,6 +9,12 @@ Scope::~Scope()
         delete i.second;
     for(Scope* i:this->sonScope)
         delete i;
+    if(fatherScope)
+        for(auto i = fatherScope->sonScope.begin(); i < fatherScope->sonScope.end(); i++)
+        {
+            if(*i == this)
+                fatherScope->sonScope.erase(i);
+        }
 }
 
 Variable* Scope::addVariable(string name)
@@ -64,5 +70,41 @@ void Scope::deleteFunction(Function *fun)
     {
         if(p.second==fun)
             this->functionList.erase(p.first);
+    }
+}
+
+Variable* Scope::findVariable(string name,bool thisScope)
+{
+    Variable* result=this->variableList[name];
+
+    if(result==0)
+        result=nullptr;
+
+    if(thisScope)
+        return result;
+    else
+    {
+        if(result==nullptr)
+            return nullptr;
+        else
+            return this->fatherScope->findVariable(name,false);
+    }
+}
+
+Function* Scope::findFunction(string name,bool thisScope)
+{
+    Function* result=this->functionList[name];
+
+    if(result==0)
+        result=nullptr;
+
+    if(thisScope)
+        return result;
+    else
+    {
+        if(result==nullptr)
+            return nullptr;
+        else
+            return this->fatherScope->findFunction(name,false);
     }
 }

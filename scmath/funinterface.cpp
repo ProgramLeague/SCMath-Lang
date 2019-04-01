@@ -52,6 +52,18 @@ bool BuiltinFunc::matNum(vector<BasicNode *> &sonNode)
     return sonNode.at(0)->getType() == Matrix && sonNode.at(1)->getType() == Num;
 }
 
+bool BuiltinFunc::matNum2(vector<BasicNode *> &sonNode)
+{
+    return sonNode.at(0)->getType() == Matrix && sonNode.at(1)->getType() == Num
+            && sonNode.at(2)->getType() == Num;
+}
+
+bool BuiltinFunc::matNum3(vector<BasicNode *> &sonNode)
+{
+    return sonNode.at(0)->getType() == Matrix && sonNode.at(1)->getType() == Num
+            && sonNode.at(2)->getType() == Num && sonNode.at(3)->getType() == Num;
+}
+
 bool BuiltinFunc::matVec(vector<BasicNode *> &sonNode)
 {
     return sonNode.at(0)->getType() == Matrix && sonNode.at(1)->getType() == Vector;
@@ -106,7 +118,7 @@ BasicNode* BuiltinFunc::cos(vector<BasicNode *> &sonNode)
 
 BasicNode* BuiltinFunc::log(vector<BasicNode *> &sonNode)
 {
-    return new NumNode(std::log(BuiltinFunc::getNum(sonNode[0])) / std::log(BuiltinFunc::getNum(sonNode[1])));
+    return new NumNode(std::log(BuiltinFunc::getNum(sonNode[1])) / std::log(BuiltinFunc::getNum(sonNode[0])));
 }
 
 BasicNode* BuiltinFunc::ln(vector<BasicNode *> &sonNode)
@@ -234,4 +246,32 @@ BasicNode* BuiltinFunc::assignment(vector<BasicNode *> &sonNode)
     VarNode* v=(VarNode*)sonNode[0];
     v->setVal(copyHelp::copyVal(sonNode[1])); //在参数类型检查时已经进行eval
     return v->eval(); //支持yoda表达法
+}
+
+BasicNode* BuiltinFunc::rsub(vector<BasicNode *> &sonNode)
+{
+    matrixNode* m1=(matrixNode*)sonNode[0];
+    NumNode* n1=(NumNode*)sonNode[1];
+    NumNode* n2=(NumNode*)sonNode[2];
+    NumNode* n3=(NumNode*)sonNode[3];
+    m1->rsub(n1->getNum(),n2->getNum(),n3->getNum());
+    return new matrixNode(*m1);
+}
+
+BasicNode* BuiltinFunc::rmul(vector<BasicNode *> &sonNode)
+{
+    matrixNode* m1=(matrixNode*)sonNode[0];
+    NumNode* n1=(NumNode*)sonNode[1];
+    NumNode* n2=(NumNode*)sonNode[2];
+    m1->rmul(n1->getNum(),n2->getNum());
+    return new matrixNode(*m1);
+}
+
+BasicNode* BuiltinFunc::rswap(vector<BasicNode *> &sonNode)
+{
+    matrixNode* m1=(matrixNode*)sonNode[0];
+    NumNode* n1=(NumNode*)sonNode[1];
+    NumNode* n2=(NumNode*)sonNode[2];
+    m1->rswap(n1->getNum(),n2->getNum());
+    return new matrixNode(*m1);
 }

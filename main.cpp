@@ -84,13 +84,20 @@ int main()
         }
         if(isCommand==false)
         {
-            BasicNode* tree=scmath::toAST(input);
-            BasicNode* result=tree->eval();
-            help::t();
-            scmath::output(result);
-            //如果局部求值这个会出错，因为字面量会delete两次
-            copyHelp::delTree(result);
-            copyHelp::delTree(tree);
+            try
+            {
+                BasicNode* tree=scmath::toAST(input);
+                BasicNode* result=tree->eval();
+                help::t();
+                scmath::output(result);
+                //如果局部求值这个会出错，因为字面量会delete两次
+                copyHelp::delTree(result);
+                copyHelp::delTree(tree);    
+            }
+            catch(Excep e)
+            {
+                cout<<"Error: "<<e.getInform()<<endl;
+            }
             cout<<endl;
         }
     }

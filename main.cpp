@@ -96,7 +96,7 @@ int main()
             }
             catch(Excep e)
             {
-                cout<<"Error: "<<e.getInform()<<endl;
+                cout<<"Error: "<<e.getInform();
             }
             cout<<endl;
         }

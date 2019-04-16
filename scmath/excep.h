@@ -1,9 +1,10 @@
 #pragma once
 #include <string>
 #include "marco.h"
+using namespace std;
 
 class Excep {
-private:
+protected:
     string inform;
 public:
     Excep(string inform) : inform(inform) {}

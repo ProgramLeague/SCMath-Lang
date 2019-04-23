@@ -88,4 +88,12 @@ public:
         getchar();
     }
 
+    static vectorNode toVectorNode(vector<string>com)
+    {
+        vectorNode v(com.size()-1);
+        for(unsigned int i=1;i<com.size();i++)
+            v.v[i-1]=help::tofloat(com[i]);
+        return v;
+    }
+
 };

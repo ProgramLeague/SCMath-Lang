@@ -10,6 +10,14 @@
 
 using namespace std;
 
+void getXY(vectorNode &v1,vectorNode &v2)
+{
+    cout<<"vector x="<<endl;
+    help::getvector(v1);
+    cout<<"vector y="<<endl;
+    help::getvector(v2);
+}
+
 int main()
 {
     while(1)
@@ -61,25 +69,31 @@ int main()
                 help::t();
                 cout<<lab::avg(com)<<endl;
             }
-            if(com[0]=="dev")
+            if(com[0]=="var")
             {
                 isCommand=true;
                 help::t();
-                cout<<lab::dev(com)<<endl;
+                cout<<lab::var(com)<<endl;
             }
             if(com[0]=="linerFit")
             {
                 isCommand=true;
                 vectorNode v1(help::toint(com[1]));
                 vectorNode v2(help::toint(com[1]));
-                cout<<"vector x="<<endl;
-                help::getvector(v1);
-                cout<<"vector y="<<endl;
-                help::getvector(v2);
+                getXY(v1,v2);
                 double k,b;
                 tie(k,b)=lab::LeastSquare(v1,v2);
                 help::t();
                 cout<<"k:"<<k<<" b:"<<b<<endl;
+            }
+            if(com[0]=="r")
+            {
+                isCommand=true;
+                vectorNode v1(help::toint(com[1]));
+                vectorNode v2(help::toint(com[1]));
+                getXY(v1,v2);
+                help::t();
+                cout<<"r:"<<lab::r(v1,v2)<<endl;
             }
         }
         if(isCommand==false)

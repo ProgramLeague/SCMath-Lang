@@ -7,6 +7,13 @@ class vectorNode : public BasicNode
 {
 private:
     unsigned int l;
+    void copy(const vectorNode& m2)
+    {
+        this->l=m2.l;
+        this->v = new double[l];
+        for (unsigned int i = 0; i < l; i++)
+            this->v[i] = m2.v[i];
+    }
 
 public:
     //SCMath兼容
@@ -27,10 +34,14 @@ public:
 
     vectorNode(const vectorNode& m2) : BasicNode(m2)
     {
-        this->l = m2.l;
-        this->v = new double[l];
-        for (unsigned int i = 0; i < l; i++)
-            this->v[i] = m2.v[i];
+        copy(m2);
+    }
+
+    vectorNode& operator=(const vectorNode& m2)
+    {
+        delete []v;
+        copy(m2);
+        return *this;
     }
 
     double dot(vectorNode &v2)
@@ -76,7 +87,10 @@ public:
         printf("\n");
     }
 
-    ~vectorNode() { delete[]v; }
+    ~vectorNode()
+    {
+        delete[]v;
+    }
     unsigned int getl() { return l; }
 };
 
